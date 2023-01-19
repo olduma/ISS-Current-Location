@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ISS live</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="src/leaflet/leaflet.css">
+</head>
+<body>
+
+<div class="parent">
+  <div class="logo">
+    <img src="src/logo.png" alt="logo">
+  </div>
+  <div class="sidebar">
+      <ul class="menu">
+          <li>Home</li>
+          <li>About ISS</li>
+          <li>Images</li>
+          <li>News</li>
+      </ul>
+  </div>
+  <div class="content">
+      <div id="map"></div>
+      <div id="map_options">
+          <table class="">
+              <tbody><tr>
+                  <td><input type="checkbox" id="OrbitalPathShow" value="1" checked="checked" title="Display the orbital path of the International Space Station"> <label title="Display the orbital path of the International Space Station">Show Orbital Path</label></td>
+                  <td><input type="checkbox" id="freeLook" value="1" checked="checked" title="Keep the map centered upon the International Space Station"> <label title="Keep the map centered upon the International Space Station">ISS Centered</label></td>
+                  <td><input type="checkbox" id="ISSHorizon" value="1" checked="checked" title="Display the Earth's horizon as seen from the International Space Station"> <label title="Display the Earth's horizon as seen from the International Space Station">Show Horizon</label></td>
+              </tr>
+              </tbody></table>
+      </div>
+  </div>
+  <div class="ads">ads</div>
+  <div class="footer">
+      <label>Created by </label>
+      <a  class="creator"  href="https://github.com/olduma/" target="_blank">olduma</a>
+  </div>
+</div>
+
+<script src="src/leaflet/leaflet.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

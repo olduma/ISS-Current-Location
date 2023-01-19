@@ -1,0 +1,53 @@
+.parent {
+    display: grid;
+    grid-template-columns: 0.2fr 1fr 0.2fr;
+    grid-template-rows: 0.2fr repeat(2, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+
+.logo {
+    grid-area: 1 / 1 / 2 / 6;
+    margin: 0 auto;
+}
+.sidebar { grid-area: 2 / 1 / 3 / 2; }
+.content {
+    grid-area: 2 / 2 / 3 / 6;
+}
+.ads {
+    grid-area: 2 / 3 / 3 / 4;
+}
+.footer {
+    grid-area: 3 / 1 / 4 / 4;
+    margin: 0 auto;
+}
+
+.menu li{
+    color: darkblue;
+    cursor: pointer;
+}
+
+.menu li:hover{
+    color: orangered;
+}
+
+.creator {
+    cursor: pointer;
+    color: darkblue;
+    text-decoration: none
+}
+
+.creator:hover{
+    color: orangered;
+}
+
+#map {
+    height: 400px;
+    max-width: 80%;
+}
+
+#map_options{
+    max-width: 80%;
+    text-align: -webkit-center;
+}
+
