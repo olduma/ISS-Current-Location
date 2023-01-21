@@ -9,34 +9,81 @@
 <body>
 
 <div class="parent">
-  <div class="logo">
-    <img src="src/logo.png" alt="logo">
-  </div>
-  <div class="sidebar">
-      <ul class="menu">
-          <li>Home</li>
-          <li>About ISS</li>
-          <li>Images</li>
-          <li>News</li>
-      </ul>
-  </div>
-  <div class="content">
-      <div id="map"></div>
-      <div id="map_options">
-          <table class="">
-              <tbody><tr>
-                  <td><input type="checkbox" id="OrbitalPathShow" value="1" checked="checked" title="Display the orbital path of the International Space Station"> <label title="Display the orbital path of the International Space Station">Show Orbital Path</label></td>
-                  <td><input type="checkbox" id="freeLook" value="1" checked="checked" title="Keep the map centered upon the International Space Station"> <label title="Keep the map centered upon the International Space Station">ISS Centered</label></td>
-                  <td><input type="checkbox" id="ISSHorizon" value="1" checked="checked" title="Display the Earth's horizon as seen from the International Space Station"> <label title="Display the Earth's horizon as seen from the International Space Station">Show Horizon</label></td>
-              </tr>
-              </tbody></table>
-      </div>
-  </div>
-  <div class="ads">ads</div>
-  <div class="footer">
-      <label>Created by </label>
-      <a  class="creator"  href="https://github.com/olduma/" target="_blank">olduma</a>
-  </div>
+    <div class="logo">
+        <img src="src/logo.png" alt="logo">
+    </div>
+
+    <div class="sidebar">
+        <ul class="menu">
+            <li>Home</li>
+            <li>About ISS</li>
+            <li>Images</li>
+            <li>News</li>
+        </ul>
+
+        <div class="live_data">
+            <table class="table table-striped">
+                <tbody>
+                <tr>
+                    <td><strong>Time</strong></td>
+                    <td id="iss_time">07:48:28</td>
+                </tr>
+                <tr>
+                    <td><strong>Altitude</strong></td>
+                    <td><span id="iss_alt">428.015</span> km</td>
+                </tr>
+                <tr>
+                    <td><strong>Velocity</strong></td>
+                    <td><span id="iss_vel">27561.704</span> km/h</td>
+                </tr>
+                <tr>
+                    <td><strong>Latitude</strong></td>
+                    <td id="iss_lat">38.56578</td>
+                </tr>
+                <tr>
+                    <td><strong>Longitude</strong></td>
+                    <td id="iss_lon">28.56578</td>
+                </tr>
+                <tr>
+                    <td colspan="2" id="iss_vis" class="index-daylight-sat-key">The ISS is in daylight
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div></div>
+        </div>
+
+    </div>
+
+    <div class="content">
+        <div id="map"></div>
+        <div id="map_options">
+            <table class="">
+                <tbody>
+                <tr>
+                    <td><input type="checkbox" id="OrbitalPathShow" value="1" checked="checked"
+                               title="Display the orbital path of the International Space Station"> <label
+                            title="Display the orbital path of the International Space Station">Show Orbital
+                        Path</label></td>
+                    <td><input type="checkbox" id="freeLook" value="1" checked="checked"
+                               title="Keep the map centered upon the International Space Station"> <label
+                            title="Keep the map centered upon the International Space Station">ISS Centered</label></td>
+                    <td><input type="checkbox" id="ISSHorizon" value="1" checked="checked"
+                               title="Display the Earth's horizon as seen from the International Space Station"> <label
+                            title="Display the Earth's horizon as seen from the International Space Station">Show
+                        Horizon</label></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="ads"></div>
+
+    <div class="footer">
+        <label>Created by </label>
+        <a class="creator" href="https://github.com/olduma/" target="_blank">olduma</a>
+    </div>
 </div>
 
 <script src="src/leaflet/leaflet.js"></script>

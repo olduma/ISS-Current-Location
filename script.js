@@ -9,7 +9,7 @@ window.addEventListener("DOMContentLoaded", () => {
         iconUrl: 'src/iss.svg',
         iconSize: [40, 40]
     });
-    const map = L.map('map').setView([0, 0], 3);
+    const map = L.map('map', {minZoom: 1.5}).setView([0, 0], 3);
     const iss = L.marker([0, 0], {icon: myIcon}).addTo(map);
     const circle = L.circle([0, 0], {
         color: 'red',
@@ -47,8 +47,87 @@ window.addEventListener("DOMContentLoaded", () => {
         circle.setLatLng([json.latitude, json.longitude]);
         if (freeLook.checked) map.panTo([json.latitude, json.longitude], animate = true);
         showHorizon(json.footprint);
+        liveData(json);
+
+    }
+
+    function liveData( data ) {
+        const iss_lat = document.querySelector("#iss_lat"),
+            iss_lon = document.querySelector("#iss_lon"),
+            iss_alt = document.querySelector("#iss_alt"),
+            iss_vel = document.querySelector("#iss_vel"),
+            iss_vis = document.querySelector("#iss_vis"),
+            iss_time = document.querySelector("#iss_time");
+
+        iss_lat.textContent = data.latitude.toFixed(5);
+        iss_lon.textContent = data.longitude.toFixed(5);
+        iss_alt.textContent = data.altitude.toFixed(3);
+        iss_vel.textContent = data.velocity.toFixed(3);
+        iss_vis.textContent = `The ISS is in ${data.visibility}`;
+        iss_time.textContent = new Date().toLocaleTimeString();
+
+        if (data.visibility === "daylight"){
+            iss_vis.style.cssText = `
+                background-color: yellow;
+                color: black;
+            `
+        }else{
+            iss_vis.style.cssText = `
+                background-color: black;
+                color: white;
+            `
+        }
+    }
+
+
+    // updateISSFlightPath
+
+    let polyline = L.polyline([], {color: 'blue', weight: 1}).addTo(map);
+    let polylineNext = L.polyline([], {color: 'blue', weight: 1}).addTo(map);
+
+    updateISSFlightPath();
+    orbitalPathShow.addEventListener("click", () => {
+        updateISSFlightPath();
+    })
+
+    async function updateISSFlightPath() {
+        let timeToPlot = Math.round(new Date().getTime()/1000);
+
+        let timestamps = `${timeToPlot},`;
+        for (let i = 0; i < 45; i++){
+            timeToPlot += 150;
+            timestamps += `${timeToPlot},`;
+        }
+        timestamps = timestamps.slice(0,-1);
+
+        const data = await fetch(`https://api.wheretheiss.at/v1/satellites/25544/positions?timestamps=${timestamps}&units=kilometers`);
+        const json = await data.json();
+
+        let lon = json[0].longitude;
+        let flightPathCoordinates = [];
+        let flightPathCoordinatesNext = [];
+
+        json.forEach(item => {
+                if (item.longitude >= lon) {
+                    flightPathCoordinates.push([item.latitude, item.longitude]);
+                    lon = item.longitude;
+                }else{
+                    if (item.longitude <= flightPathCoordinates[0][1])
+                    flightPathCoordinatesNext.push([item.latitude, item.longitude]);
+                }
+        })
+
+        if (orbitalPathShow.checked){
+            polyline.setLatLngs(flightPathCoordinates);
+            polylineNext.setLatLngs(flightPathCoordinatesNext);
+        }else{
+            polyline.setLatLngs([]);
+            polylineNext.setLatLngs([]);
+        }
+
 
     }
 
     setInterval(() => issLocation(url), 1000);
+    setInterval(() => updateISSFlightPath(), 60000);
 })
