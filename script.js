@@ -2,7 +2,8 @@ window.addEventListener("DOMContentLoaded", () => {
 
     const orbitalPathShow = document.querySelector("#OrbitalPathShow"),
         freeLook = document.querySelector("#freeLook"),
-        ISSHorizon = document.querySelector("#ISSHorizon");
+        ISSHorizon = document.querySelector("#ISSHorizon"),
+        showUserLocation = document.querySelector("#user_location");
 
     const url = 'https://api.wheretheiss.at/v1/satellites/25544';
     const myIcon = L.icon({
@@ -24,6 +25,7 @@ window.addEventListener("DOMContentLoaded", () => {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
+
     // show or hide Horizon
     function showHorizon(footprint = 1) {
         if (ISSHorizon.checked) {
@@ -38,15 +40,15 @@ window.addEventListener("DOMContentLoaded", () => {
 
         iss.setLatLng([json.latitude, json.longitude])
             .bindPopup(`
-                        Latitude: ${json.latitude.toFixed(2)}<br>
-                        Longitude: ${json.longitude.toFixed(2)}<br>
-                        Altitude: ${json.altitude.toFixed(2)} km<br>
-                        Velocity: ${json.velocity.toFixed(2)} km/h<br>
+                        Latitude: ${json["latitude"].toFixed(2)}<br>
+                        Longitude: ${json["longitude"].toFixed(2)}<br>
+                        Altitude: ${json["altitude"].toFixed(2)} km<br>
+                        Velocity: ${json["velocity"].toFixed(2)} km/h<br>
                         `);
 
         circle.setLatLng([json.latitude, json.longitude]);
         if (freeLook.checked) map.panTo([json.latitude, json.longitude], animate = true);
-        showHorizon(json.footprint);
+        showHorizon(json["footprint"]);
         liveData(json);
 
     }
@@ -59,10 +61,10 @@ window.addEventListener("DOMContentLoaded", () => {
             iss_vis = document.querySelector("#iss_vis"),
             iss_time = document.querySelector("#iss_time");
 
-        iss_lat.textContent = data.latitude.toFixed(5);
-        iss_lon.textContent = data.longitude.toFixed(5);
-        iss_alt.textContent = data.altitude.toFixed(3);
-        iss_vel.textContent = data.velocity.toFixed(3);
+        iss_lat.textContent = data["latitude"].toFixed(5);
+        iss_lon.textContent = data["longitude"].toFixed(5);
+        iss_alt.textContent = data["altitude"].toFixed(3);
+        iss_vel.textContent = data["velocity"].toFixed(3);
         iss_vis.textContent = `The ISS is in ${data.visibility}`;
         iss_time.textContent = new Date().toLocaleTimeString();
 
@@ -79,15 +81,16 @@ window.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-
     // updateISSFlightPath
 
     let polyline = L.polyline([], {color: 'blue', weight: 1}).addTo(map);
     let polylineNext = L.polyline([], {color: 'blue', weight: 1}).addTo(map);
 
-    updateISSFlightPath();
+    // updateISSFlightPath();
     orbitalPathShow.addEventListener("click", () => {
-        updateISSFlightPath();
+        updateISSFlightPath().catch(e => {
+            new console.error(e);
+        });
     })
 
     async function updateISSFlightPath() {
@@ -124,10 +127,30 @@ window.addEventListener("DOMContentLoaded", () => {
             polyline.setLatLngs([]);
             polylineNext.setLatLngs([]);
         }
-
-
     }
 
-    setInterval(() => issLocation(url), 1000);
-    setInterval(() => updateISSFlightPath(), 60000);
+    //geolocation
+    let userLocation = L.marker([0, 0]).setOpacity(0).addTo(map);
+
+    showUserLocation.addEventListener("click", () => {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                let userLat = position.coords.latitude;
+                let userLon = position.coords.longitude;
+                // this is just a marker placed in that position
+                userLocation.setLatLng([position.coords.latitude, position.coords.longitude]);
+
+                if (showUserLocation.checked){
+                    userLocation.setOpacity(1);
+                    // move the map to have the location in its center
+                    map.panTo(new L.LatLng(userLat, userLon));
+                }else{
+                    userLocation.setOpacity(0);
+                }
+            })
+    })
+
+
+
+    updateISSFlightPath().then(() => setInterval(() => issLocation(url), 1000));
+    issLocation(url).then(() => setInterval(() => updateISSFlightPath(), 60000));
 })
